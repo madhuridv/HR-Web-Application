@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router";
 import axios from "axios";
+import "../styles/create.css";
 
 class Create extends Component {
   constructor(props) {
@@ -10,6 +11,8 @@ class Create extends Component {
       Efname: "",
       Elname: "",
       Eid: "",
+      E401k: "",
+      Ehsa: "",
       message: "",
       status: "",
       success: false,
@@ -31,29 +34,29 @@ class Create extends Component {
       Efname: this.state.Efname,
       Elname: this.state.Elname,
       Esal: this.state.Esal,
+      E401k: this.state.E401k,
+      Ehsa: this.state.Ehsa,
     };
     axios.defaults.headers.common["authorization"] = localStorage.getItem(
       "token"
     );
     console.log(data);
     axios
-      .post("http://127.0.0.1:3001/empDetails/add", data)
+      .post("http://localhost:3001/empDetails/add", data)
       .then((response) => {
-        console.log("response", response.status);
+        console.log("response", response);
         if (response.status === 200) {
           alert("Employee Added successfully!");
           this.setState({
             success: true,
           });
-        } else if (response.status === 400) {
-          alert("Employee ID Exists!");
-        } else if (response.status === 401) {
-          alert("Database Error!");
         }
       })
       .catch((error) => {
-        console.log(error);
-        alert("Unable to add Employee");
+        console.log("error in axios:", error);
+        this.setState({
+          message: error.response.data,
+        });
       });
   }
 
@@ -69,63 +72,104 @@ class Create extends Component {
     return (
       <div>
         {redirectVar}
+        <div style={{ color: "#ff0000" }}>{this.state.message}</div>
         <br />
-        <div className="container">
-          <form onSubmit={this.onSubmit}>
-            <div style={{ width: "30%" }} className="form-group">
-              <input
-                type="text"
-                className="form-control"
-                name="Eid"
-               
-                onChange={this.onChange}
-                placeholder="Employee ID"
-                //pattern="^[0-9]+$"
-                title="Employee ID should be a number"
-              />
-            </div>
-            <br />
-            <div style={{ width: "30%" }} className="form-group">
-              <input
-                type="text"
-                className="form-control"
-                name="Efname"
-                onChange={this.onChange}
-                pattern="^[A-Za-z0-9 ]+$"
-                placeholder="Employee First Name"
-              />
-              &nbsp;
-              <input
-                type="text"
-                className="form-control"
-                name="Elname"
-                onChange={this.onChange}
-                pattern="^[A-Za-z0-9 ]+$"
-                placeholder="Employee Last Name"
-              />
-            </div>
-            <br />
-            <div style={{ width: "30%" }} className="form-group">
-              <input
-                type="Number"
-                className="form-control"
-                name="Esal"
-                onChange={this.onChange}
-                placeholder="Salary"
-                pattern="^[0-9]+$"
-                title="Salary should be a number"
-              />
-            </div>
-            <br />
+        <div className="container signup">
+          <div class="signup-form">
+            <form onSubmit={this.onSubmit}>
+              <div className="row">
+                <div className="col">
+                  <div className="form-group">
+                    <label htmlFor="Eid">Employee ID :</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="Eid"
+                      onChange={this.onChange}
+                      placeholder="Employee ID"
+                      required
+                      title="Employee ID should be a number"
+                    />
+                  </div>
 
-            <br />
-            <div style={{ color: "#ff0000" }}>{this.state.message}</div>
-            <div style={{ width: "30%" }}>
-              <button className="btn btn-success" type="submit">
-                Add
-              </button>
-            </div>
-          </form>
+                  <div className="form-group">
+                    <label htmlFor="Efname">First Name:</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="Efname"
+                      onChange={this.onChange}
+                      pattern="^[A-Za-z0-9 ]+$"
+                      placeholder="Employee First Name"
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="Elname">Last Name:</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="Elname"
+                      onChange={this.onChange}
+                      pattern="^[A-Za-z0-9 ]+$"
+                      placeholder="Employee First Name"
+                      required
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="Esal">Salary :</label>
+                    <input
+                      type="Number"
+                      className="form-control"
+                      name="Esal"
+                      onChange={this.onChange}
+                      placeholder="Salary"
+                      pattern="^[0-9]+$"
+                      title="Salary should be a number"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="col">
+                  <div className="form-group">
+                    <label htmlFor="E401k">401k Contribution :</label>
+                    <input
+                      type="Number"
+                      className="form-control"
+                      name="E401k"
+                      onChange={this.onChange}
+                      placeholder="401k Contribution"
+                      pattern="^[0-9]+$"
+                      title="Enter a Number"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="Ehsa">HSA Contribution :</label>
+                    <input
+                      type="Number"
+                      className="form-control"
+                      name="Ehsa"
+                      onChange={this.onChange}
+                      placeholder="HSA Contribution"
+                      pattern="^[0-9]+$"
+                      title="Enter a number"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="col">
+                  <div className="signup-block">
+                    <button type="submit" className="btn btn-primary">
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     );

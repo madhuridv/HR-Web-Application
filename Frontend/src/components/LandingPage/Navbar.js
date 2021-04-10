@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Redirect } from "react-router";
+import datis from "./datis.png";
 
 //create the Navbar Component
 class Navbar extends Component {
@@ -45,9 +46,22 @@ class Navbar extends Component {
     return (
       <div>
         {redirectVar}
-        <nav className="navbar navbar-inverse">
+
+       <nav className="navbar navbar-inverse"> 
+       
           <div className="container-fluid">
             <div className="navbar-header">
+              <div className="navbar-brand" href="#">
+                <img
+                  src={datis}
+                  width="30"
+                  height="30"
+                 
+                  alt="datis image"
+                />{" "}
+              </div>
+
+              {/* <img className="" src={datis} alt="datis image" width="50px" /> */}
               <a className="navbar-brand">HR Web Application</a>
             </div>
             <ul className="nav navbar-nav">

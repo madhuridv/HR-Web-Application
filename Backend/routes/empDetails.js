@@ -6,35 +6,19 @@ const Emp = require("../Models/EmpModel");
 
 router.post("/add", checkAuth, (req, res) => {
   let empID = req.body.Eid;
-  //let healthInsurance = 0.075 * req.body.Esal;
-  //console.log("deduction401k", deduction401k);
-  //console.log("healthInsurance", healthInsurance);
-
-  // let emp = new Emp({
-  //   Ename: req.body.Ename,
-  //   Esal: req.body.Esal,
-  //   deduction401k,
-  //   healthInsurance,
-  // });
   console.log(" details from frontend:", req.body);
 
   Emp.find({ Eid: empID }, (err, results) => {
     if (err) {
       console.log(err);
-      res.writeHead(500, {
-        "Content-Type": "text/plain",
-      });
-      res.end();
+      res.status(500).end("Server Error");
     }
     if (results.length > 0) {
       console.log(`Employee ID already exists`);
-      res.writeHead(400, {
-        "Content-Type": "text/plain",
-      });
-      res.end();
+      res.status(400).end("Employee ID already exists");
     } else {
-      let _401k = 0.1 * req.body.Esal;
-      let hsa = 0.05 * req.body.Esal;
+      let _401k = (req.body.E401k / 100) * req.body.Esal;
+      let hsa = (req.body.Ehsa / 100) * req.body.Esal;
       let federalTax = 0.16 * req.body.Esal;
       let stateTax = 0.1 * req.body.Esal;
       let ssnMedicare = 0.075 * req.body.Esal;
@@ -56,10 +40,7 @@ router.post("/add", checkAuth, (req, res) => {
       empToCreate.save((error) => {
         if (error) {
           console.log(`Saving Error in create employee: ${error}`);
-          res.writeHead(401, {
-            "Content-Type": "text/plain",
-          });
-          res.end();
+          res.status(401).end("Unable to Save into the database");
         }
         console.log("Successfully Created");
         res.writeHead(200, {
