@@ -1,7 +1,7 @@
 "use strict";
 const express = require("express");
 const router = express.Router();
-const { checkAuth } = require("../utils/passport");
+const { checkAuth } = require("../Utils/passport");
 const Emp = require("../Models/EmpModel");
 
 router.post("/add", checkAuth, (req, res) => {
