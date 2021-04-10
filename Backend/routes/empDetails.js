@@ -51,7 +51,29 @@ router.post("/add", checkAuth, (req, res) => {
     }
   });
 });
-
+router.post("/delete", checkAuth, (req, res) => {
+  console.log("Inside delete");
+  console.log("Eid is", req.body.empID);
+  Emp.find({ Eid: req.body.empID }, (error, result) => {
+    console.log("result is:", result);
+    if (error) {
+      res.status(500).end("Server error");
+    }
+    if (result.length > 0) {
+      Emp.deleteOne({ Eid: req.body.empID }, (error) => {
+        if (error) {
+          console.log("Delete Error");
+          res.status(401).end("Delete Error");
+        } else {
+          console.log("Delete Successfull");
+          res.status(200).end("Deleted Successfull");
+        }
+      });
+    } else {
+      res.status(400).end("DB error");
+    }
+  });
+});
 router.get("/home", checkAuth, (req, res) => {
   console.log("Inside home");
 

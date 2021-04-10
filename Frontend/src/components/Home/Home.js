@@ -1,13 +1,14 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Redirect } from "react-router";
-
+import { Link } from "react-router-dom";
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
       empDetails: [],
+      message: "",
     };
   }
   //get the books data from backend
@@ -23,9 +24,31 @@ class Home extends Component {
       });
     });
   }
+  onDelete = (Eid) => {
+    console.log(Eid);
+    const data = { empID: Eid };
+    console.log("Data", data);
+    axios.defaults.withCredentials = true;
+    axios
+      .post("http://localhost:3001/empDetails/delete", data)
+      .then((response) => {
+        console.log("Response after Axios call", response);
+        if (response.status === 200) {
+          if (alert("Employee Deleted Successfully!")) {
+          } else {
+            window.location.reload();
+          }
+        }
+      })
+      .catch((error) => {
+        this.setState({
+          message: error.response.data,
+        });
+      });
+  };
 
   render() {
-    //iterate over books to create a table row
+    // iterate over employees to create a table row
     let details = this.state.empDetails.map((emp) => {
       return (
         <tr>
@@ -37,18 +60,31 @@ class Home extends Component {
           <td>{Math.round(emp.healthInsurance, 2)}$</td>
           <td>{Math.round(emp.TotalTax, 2)}$</td>
           <td>{emp.PaidAmt}$</td>
+          <td>
+            <span>
+              <button
+                className="btn btn-danger"
+                onClick={() => this.onDelete(emp.Eid)}
+              >
+                Delete
+              </button>
+            </span>
+          </td>
         </tr>
       );
     });
+
     //if not logged in go to login page
     let redirectVar = null;
     if (!localStorage.getItem("token")) {
       redirectVar = <Redirect to="/login" />;
     }
+
     return (
       <div>
         {redirectVar}
         <div className="container">
+          <div style={{ color: "#ff0000" }}>{this.state.message}</div>
           <h2>List of All Employees</h2>
           <table className="table">
             <thead>
