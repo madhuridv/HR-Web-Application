@@ -1,4 +1,4 @@
-**HR web application **
+**HR web application**
 
 A sample HR application built using React JS for the front-end and Node.js for the backend. The data is stored in MongoDB.
 This application allows the user you to enter employee names, salary information, deductions,
